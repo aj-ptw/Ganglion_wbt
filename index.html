@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Ganglion Web Bluetooth</title>
+  <style>
+  .on{
+    background-color: #66ff66;
+  }
+
+  .off{
+
+  }
+  </style>
+</head>
+
+<body>
+  <button type="button" id="connect_btn" class="off">Connect to Ganglion</button>
+  <button type="button" id="disconnect_btn" class="on">Disconnect Ganglion</button>
+  <button type="button" id="read_btn" class="off">Read Ganglion</button>
+
+</body>
+
+<script type="text/javascript">
+let connect_button = document.getElementById('connect_btn');
+let disconnect_button = document.getElementById('disconnect_btn');
+let read_button = document.getElementById('read_btn');
+let disconnect_characteristic;
+let gang_name;
+
+connect_button.addEventListener('click', function(event) {
+  navigator.bluetooth.requestDevice({ filters: [{ namePrefix: 'Ganglion-' }], optionalServices: [0xfe84] })
+  .then(device => {
+    // Human-readable name of the device.
+    console.log('Connecting to ' + device.name + ' ...');
+    gang_name = device.name;
+
+    // Attempts to connect to remote GATT Server.
+    return device.gatt.connect();
+  })
+  .then(server => {
+    // Getting Primary Service
+    return server.getPrimaryService(0xfe84);
+  })
+  .then(service => {
+    // Getting Disconnect Characteristic
+    return service.getCharacteristic('2d30c084-f39f-4ce6-923f-3484ea480596');
+  })
+  .then(characteristic => {
+    disconnect_characteristic = characteristic;
+    //Changes button classes when successful
+    connect_button.className = "on";
+    disconnect_button.className = "off";
+    console.log('Connected to ' + gang_name);
+  })
+  .catch(error => { console.log(error); });
+});
+
+disconnect_button.addEventListener('click', function(event){
+  // Writing 1 is the signal to disconnect the Ganglion.
+  var disconnect_signal = new Uint8Array([1]);
+  disconnect_characteristic.writeValue(disconnect_signal)
+  .then(_ => {
+    console.log('Ganglion has been disconnected');
+    disconnect_button.className = "on";
+    connect_button.className = "off";
+  })
+  .catch(error => { console.log(error); });
+});
+
+read_button.addEventListener('click', function(event){
+    read_button.className = "on";
+});
+
+  </script>
+
+  </html>
