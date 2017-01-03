@@ -14,6 +14,7 @@ connect_button.addEventListener('click', function(event) {
       connect_button.innerText = "Disconnect Ganglion";
       console.log('Connected to ' + gang_name);
     });
+    .catch(error => { console.log(error); });
   } else {
     disconnectFromServices()
     .then(_ => {
@@ -54,7 +55,6 @@ function connectToServices(){
     send_characteristic = characteristics.find(char => char.uuid === '2d30c083-f39f-4ce6-923f-3484ea480596');
     disconnect_characteristic = characteristics.find(char => char.uuid === '2d30c084-f39f-4ce6-923f-3484ea480596');
   })
-  .catch(error => { console.log(error); });
 };
 
 function disconnectFromServices(){
