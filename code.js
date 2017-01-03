@@ -13,7 +13,7 @@ connect_button.addEventListener('click', function(event) {
       connect_button.className = "btn btn-success connected";
       connect_button.innerText = "Disconnect Ganglion";
       console.log('Connected to ' + gang_name);
-    });
+    })
     .catch(error => { console.log(error); });
   } else {
     disconnectFromServices()
