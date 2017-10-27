@@ -34,7 +34,7 @@ read_button.addEventListener('click', function(event){
   let encoder = new TextEncoder();
   let startStream = encoder.encode('b');
   send_characteristic.writeValue(startStream)
-  .then(_ =>{
+  .then(() =>{
     return receive_characteristic.readValue();
   })
   .then(value => {
@@ -558,12 +558,12 @@ function decompressDeltas18Bit (buffer) {
  * @private
  */
 function decompressDeltas19Bit (buffer) {
-  let D = new Array(k.OBCIGanglionSamplesPerPacket); // 2
+  let D = new Array(kOBCIGanglionSamplesPerPacket); // 2
   D[0] = [0, 0, 0, 0];
   D[1] = [0, 0, 0, 0];
 
   let receivedDeltas = [];
-  for (let i = 0; i < k.OBCIGanglionSamplesPerPacket; i++) {
+  for (let i = 0; i < kOBCIGanglionSamplesPerPacket; i++) {
     receivedDeltas.push([0, 0, 0, 0]);
   }
 
